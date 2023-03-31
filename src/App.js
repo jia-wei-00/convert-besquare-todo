@@ -16,7 +16,7 @@ function App() {
       <div className="bg-wrapper">
         <div className="app d-flex">
           <Left />
-          <Middle setDetails={{ setTodoClick, setTodoDetails, setKey }} />
+          <Middle setDetails={{ setTodoClick, setTodoDetails, setKey, key }} />
           <Right details={{ todoClick, todoDetails, key, setTodoClick }} />
         </div>
       </div>

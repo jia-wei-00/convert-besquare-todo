@@ -7,36 +7,41 @@ const Right = (props) => {
   const show = props.details.todoClick;
   const key = props.details.key;
 
-  const [text, setText] = useState(todo.text);
+  const [text, setText] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
 
   useEffect(() => {
     setText(todo.text);
-    setDueDate(todo.due_date);
+
+    if (todo.due_date === null) {
+      setDueDate("");
+    } else {
+      setDueDate(todo.due_date);
+    }
+
     setDescription(todo.description);
-  }, [props])
+  }, [props]);
+
+  const deleteFunc = () => {
+    props.deleteTodo(key);
+    props.details.setTodoClick(false);
+  };
 
   const updateFunc = () => {
     const tmpData = {
       id: todo.id,
-      text: todo.text,
+      text: text,
       is_complete: todo.is_complete,
       is_deleted: todo.is_deleted,
-      due_date: todo.dueDate,
-    }
-    
-    props.deleteTodo(key);
-    props.details.setTodoClick(false);
-  }
+      due_date: dueDate,
+      description: description,
+    };
 
-  // id: Date.now(),
-  //   text: todoText,
-  //     is_complete: false,
-  //       is_deleted: false,
-  //         due_date: null,
-  //           description: "",
+    props.updateTodo(key, tmpData);
 
+    // props.updateTodo(tmpData);
+  };
 
   return (
     <div className="app-sidebar-right">
@@ -77,10 +82,18 @@ const Right = (props) => {
               onChange={(e) => setDueDate(e.target.value)}
             ></input>
             <div className="py-4 d-flex justify-end">
-              <button id="btn-delete-todo" className="btn btn-secondary mr-2" onClick={updateFunc}>
+              <button
+                id="btn-delete-todo"
+                className="btn btn-secondary mr-2"
+                onClick={deleteFunc}
+              >
                 Delete
               </button>
-              <button id="btn-update-todo" className="btn btn-primary" onClick={() => updateTodo(props.details.key, props.details.todoDetails)}>
+              <button
+                id="btn-update-todo"
+                className="btn btn-primary"
+                onClick={updateFunc}
+              >
                 Update
               </button>
             </div>

@@ -31,19 +31,26 @@ const todoReducer = (state = initialState, action) => {
         todo_list: updatedTodoList,
       };
     case UPDATE_TODO:
-      const tmpUpdate = state.todo_list;
-      tmpUpdate.todo_list.splice(action.index, 1, action.payload);
-
       return {
-        todo_list: tmpUpdate,
+        ...state,
+        todo_list: state.todo_list.map((todo, index) => {
+          if (index === action.index) {
+            return {
+              ...todo,
+              ...action.payload,
+            };
+          }
+          return todo;
+        }),
       };
+
     case DELETE_TODO:
       const newTodoList = state.todo_list.slice();
       newTodoList.splice(action.payload, 1);
-      
-      return { 
-        ...state, 
-        todo_list: newTodoList 
+
+      return {
+        ...state,
+        todo_list: newTodoList,
       };
     default:
       return state;

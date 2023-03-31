@@ -4,7 +4,6 @@ import { addTodo, updateTodo, deleteTodo, updateDone } from "../actions";
 
 const Middle = (props) => {
   const [todoText, setTodoText] = useState("");
-  console.log(props.todo_list);
 
   const ulRef = useRef(null);
 
@@ -48,6 +47,14 @@ const Middle = (props) => {
     props.setDetails.setKey(key);
   };
 
+  const deleteFunc = (key) => {
+    if (key === props.setDetails.key) {
+      props.setDetails.setTodoClick(false);
+    }
+
+    props.deleteTodo(key);
+  };
+
   return (
     <div className="app-content">
       <div className="d-flex justify-content-between">
@@ -89,52 +96,61 @@ const Middle = (props) => {
       </div>
       <div>
         <ul ref={ulRef} id="todo-list">
-          {props.todo_list.map((todo, key) => {
-            return (
-              <li key={key}>
-                <div className="todo-item" id={`id${key}`}>
-                  <input
-                    type="checkbox"
-                    className="input-checkbox"
-                    id="todo-check"
-                    onChange={() => props.updateDone(key)}
-                    checked={todo.is_complete}
-                  />
-                  <div className="todo-text" onClick={() => onSelect(todo, key)}>
-                    <p>{todo.text}</p>
-                    {todo.due_date && (
-                      <div id="todo-due-date">
-                        <span className="due-date">
-                          <i className="fa-solid fa-calendar-days mr-2"></i>
-                          <span>
-                            {new Date(todo.due_date)
-                              .toISOString()
-                              .substring(0, 10)}
-                          </span>
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="todo-description">{todo.description}</div>
-                  </div>
-                  {todo.description && (
-                    <button
-                      className="expand-todo"
-                      onClick={() => handleToggle(key)}
+          {props.todo_list.length !== 0 ? (
+            props.todo_list.map((todo, key) => {
+              return (
+                <li key={key}>
+                  <div className="todo-item" id={`id${key}`}>
+                    <input
+                      type="checkbox"
+                      className="input-checkbox"
+                      id="todo-check"
+                      onChange={() => props.updateDone(key)}
+                      checked={todo.is_complete}
+                    />
+                    <div
+                      className="todo-text"
+                      onClick={() => onSelect(todo, key)}
                     >
-                      <i className="fa-solid fa-chevron-down"></i>
+                      <p>{todo.text}</p>
+                      {todo.due_date && (
+                        <div id="todo-due-date">
+                          <span className="due-date">
+                            <i className="fa-solid fa-calendar-days mr-2"></i>
+                            <span>
+                              {new Date(todo.due_date)
+                                .toISOString()
+                                .substring(0, 10)}
+                            </span>
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="todo-description">{todo.description}</div>
+                    </div>
+                    {todo.description && (
+                      <button
+                        className="expand-todo"
+                        onClick={() => handleToggle(key)}
+                      >
+                        <i className="fa-solid fa-chevron-down"></i>
+                      </button>
+                    )}
+                    <button
+                      className="delete-todo"
+                      onClick={() => deleteFunc(key)}
+                    >
+                      <i className="fa-solid fa-trash-can"></i>
                     </button>
-                  )}
-                  <button
-                    className="delete-todo"
-                    onClick={() => props.deleteTodo(key)}
-                  >
-                    <i className="fa-solid fa-trash-can"></i>
-                  </button>
-                </div>
-              </li>
-            );
-          })}
+                  </div>
+                </li>
+              );
+            })
+          ) : (
+            <li class="no-data">
+              <i>There are no Todos found!</i>
+            </li>
+          )}
         </ul>
       </div>
     </div>

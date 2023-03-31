@@ -1,10 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { addTodo, updateTodo, deleteTodo, updateDone } from "../actions";
 
 const Right = (props) => {
   const todo = props.details.todoDetails;
   const show = props.details.todoClick;
+  const key = props.details.key;
 
-  console.log(show);
+  const [text, setText] = useState(todo.text);
+  const [dueDate, setDueDate] = useState("");
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    setText(todo.text);
+    setDueDate(todo.due_date);
+    setDescription(todo.description);
+  }, [props])
+
+  const updateFunc = () => {
+    const tmpData = {
+      id: todo.id,
+      text: todo.text,
+      is_complete: todo.is_complete,
+      is_deleted: todo.is_deleted,
+      due_date: todo.dueDate,
+    }
+    
+    props.deleteTodo(key);
+    props.details.setTodoClick(false);
+  }
+
+  // id: Date.now(),
+  //   text: todoText,
+  //     is_complete: false,
+  //       is_deleted: false,
+  //         due_date: null,
+  //           description: "",
+
 
   return (
     <div className="app-sidebar-right">
@@ -16,7 +48,8 @@ const Right = (props) => {
               type="text"
               id="input-update-todo"
               className="input-field w-100"
-              value={todo.text}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
               spellcheck="false"
               data-ms-editor="true"
             ></input>
@@ -25,7 +58,8 @@ const Right = (props) => {
               rows="10"
               id="update-description"
               className="input-textarea w-100"
-              value={todo.description}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               spellcheck="false"
               data-ms-editor="true"
             >
@@ -39,13 +73,14 @@ const Right = (props) => {
               type="date"
               id="update-due-date"
               className="input-field w-100"
-              value={todo.due_date}
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
             ></input>
             <div className="py-4 d-flex justify-end">
-              <button id="btn-delete-todo" className="btn btn-secondary mr-2">
+              <button id="btn-delete-todo" className="btn btn-secondary mr-2" onClick={updateFunc}>
                 Delete
               </button>
-              <button id="btn-update-todo" className="btn btn-primary">
+              <button id="btn-update-todo" className="btn btn-primary" onClick={() => updateTodo(props.details.key, props.details.todoDetails)}>
                 Update
               </button>
             </div>
@@ -56,4 +91,17 @@ const Right = (props) => {
   );
 };
 
-export default Right;
+const mapStateToProps = (state) => {
+  return {
+    todo_list: state.todoState.todo_list,
+  };
+};
+
+const mapDisaptchToProps = (dispatch) => ({
+  addTodo: (props) => dispatch(addTodo(props)),
+  updateTodo: (index, props) => dispatch(updateTodo(index, props)),
+  updateDone: (props) => dispatch(updateDone(props)),
+  deleteTodo: (props) => dispatch(deleteTodo(props)),
+});
+
+export default connect(mapStateToProps, mapDisaptchToProps)(Right);

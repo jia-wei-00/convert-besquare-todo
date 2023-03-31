@@ -42,9 +42,10 @@ const Middle = (props) => {
     }
   };
 
-  const onSelect = (todo) => {
+  const onSelect = (todo, key) => {
     props.setDetails.setTodoClick(true);
     props.setDetails.setTodoDetails(todo);
+    props.setDetails.setKey(key);
   };
 
   return (
@@ -99,7 +100,7 @@ const Middle = (props) => {
                     onChange={() => props.updateDone(key)}
                     checked={todo.is_complete}
                   />
-                  <div className="todo-text" onClick={() => onSelect(todo)}>
+                  <div className="todo-text" onClick={() => onSelect(todo, key)}>
                     <p>{todo.text}</p>
                     {todo.due_date && (
                       <div id="todo-due-date">

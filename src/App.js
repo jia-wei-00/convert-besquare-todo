@@ -5,6 +5,7 @@ import { Left, Middle, Right } from "./Components";
 function App() {
   const [todoClick, setTodoClick] = useState(false);
   const [todoDetails, setTodoDetails] = useState({});
+
   const [key, setKey] = useState();
 
   return (
@@ -16,7 +17,7 @@ function App() {
         <div className="app d-flex">
           <Left />
           <Middle setDetails={{ setTodoClick, setTodoDetails, setKey }} />
-          <Right details={{ todoClick, todoDetails, key }} />
+          <Right details={{ todoClick, todoDetails, key, setTodoClick }} />
         </div>
       </div>
     </>

@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 
 const Left = (props) => {
-  // const [search, setSearch] = useState("");
   const [searchArr, setSearchArr] = useState([]);
 
   const searchFunc = (value) => {
     if (value.trim()) {
-      // setSearch(value);
       setSearchArr(props.todo_list.filter((todo) => todo.text.includes(value)));
     } else {
       setSearchArr([]);
@@ -23,13 +21,12 @@ const Left = (props) => {
         <i className="fa-solid fa-bars"></i>
       </div>
       <div className="d-flex">
-        <form id="search-form">
+        <form id="search-form" onSubmit={(e) => e.preventDefault()}>
           <input
             type="text"
             id="search-input"
             className="input-field"
             placeholder="Search"
-            // value={search}
             onChange={(e) => searchFunc(e.target.value)}
           />
           <button id="search" className="btn btn-primary" hidden></button>
